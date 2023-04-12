@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Head from 'next/head';
 import { Avatar, Button, ConfigProvider, Drawer, Layout, Menu, MenuProps } from "antd";
-import { faBars, faSignOut, faSignIn, faHome, faCubes, faUser, faUsers, faFlaskVial, faMountainCity } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faSignOut, faSignIn, faHome, faCubes, faUser, faUsers, faFlaskVial, faMountainCity, faCity } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -39,6 +39,13 @@ const DefaultLayout: React.FC<{
             label: 'Manage Province',
             icon: <FontAwesomeIcon icon={faMountainCity}></FontAwesomeIcon>,
             onClick: () => router.push('/province')
+        });
+
+        menu.push({
+            key: '/city',
+            label: 'Manage City',
+            icon: <FontAwesomeIcon icon={faCity}></FontAwesomeIcon>,
+            onClick: () => router.push('/city')
         });
 
         menu.push(
