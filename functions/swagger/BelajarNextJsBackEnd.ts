@@ -21,7 +21,7 @@ export class BelajarNextJsBackEndClient {
     /**
      * @return Success
      */
-    citiesAll(): Promise<CityDataGridItem[]> {
+    cities(): Promise<CityDataGridItem[]> {
         let url_ = this.baseUrl + "/api/Cities";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -33,11 +33,11 @@ export class BelajarNextJsBackEndClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCitiesAll(_response);
+            return this.processCities(_response);
         });
     }
 
-    protected processCitiesAll(response: Response): Promise<CityDataGridItem[]> {
+    protected processCities(response: Response): Promise<CityDataGridItem[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -98,7 +98,7 @@ export class BelajarNextJsBackEndClient {
     /**
      * @return Success
      */
-    cities(id: string): Promise<City> {
+    getCityDetail(id: string): Promise<CityDetailModel> {
         let url_ = this.baseUrl + "/api/Cities/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -113,17 +113,17 @@ export class BelajarNextJsBackEndClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCities(_response);
+            return this.processGetCityDetail(_response);
         });
     }
 
-    protected processCities(response: Response): Promise<City> {
+    protected processGetCityDetail(response: Response): Promise<CityDetailModel> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as City;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as CityDetailModel;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -131,7 +131,7 @@ export class BelajarNextJsBackEndClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<City>(null as any);
+        return Promise.resolve<CityDetailModel>(null as any);
     }
 
     /**
@@ -212,10 +212,15 @@ export class BelajarNextJsBackEndClient {
     }
 
     /**
+     * @param search (optional) 
      * @return Success
      */
-    provincesAll(): Promise<Province[]> {
-        let url_ = this.baseUrl + "/api/Provinces";
+    provincesAll(search: string | undefined): Promise<Province[]> {
+        let url_ = this.baseUrl + "/api/Provinces?";
+        if (search === null)
+            throw new Error("The parameter 'search' cannot be null.");
+        else if (search !== undefined)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -452,6 +457,13 @@ export interface CityDataGridItem {
     name?: string | undefined;
     provinceName?: string | undefined;
     createdAt?: Date;
+}
+
+export interface CityDetailModel {
+    id?: string | undefined;
+    name?: string | undefined;
+    provinceId?: string | undefined;
+    provinceName?: string | undefined;
 }
 
 export interface CityUpdateModel {
