@@ -49,10 +49,10 @@ const ProvinceTableRow: React.FC<{
             <td className="border px-4 py-2">{province.name}</td>
             <td className="border px-4 py-2">{province.createdAt?.toLocaleString()}</td>
             <td className="border px-4 py-2">
-                <button className="py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
+                <Link href={`/province/edit/${province.id}`} className="inline-block py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
                     <FontAwesomeIcon className='mr-1' icon={faEdit}></FontAwesomeIcon>
                     Edit
-                </button>
+                </Link>
                 <button onClick={onClickDelete} className="ml-1 py-1 px-2 text-xs bg-red-500 text-white rounded-lg">
                     <FontAwesomeIcon className='mr-1' icon={faRemove}></FontAwesomeIcon>
                     Delete
