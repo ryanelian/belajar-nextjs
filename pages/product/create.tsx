@@ -26,13 +26,21 @@ const FormSchema = z.object({
     description: z.string().nonempty({
         message: 'Deskripsi tidak boleh kosong'
     }),
-    price: z.number().nonnegative()
+    price: z.number({
+        invalid_type_error:'Harga tidak boleh kosong dan harus angka'
+    }).nonnegative({
+        message:'Harga tidak boleh negatif'
+    })
         .max(100000000, "Harga tidak dapat lebih dari 100 juta rupiah")
         .min(100, "Angka tidak dapat kurang dari 100 rupiah"),
-    quantity: z.number().nonnegative()
+    quantity: z.number({
+        invalid_type_error:'Quantity tidak boleh kosong dan harus angka'
+    }).nonnegative()
         .max(100, "Stok barang tidak dapat lebih dari 100")
         .min(1, "Stok barang tidak dapat kurang dari 1"),
-    brandId: z.string().nonempty({
+    brandId: z.string({
+        required_error:'Brand tidak boleh kosong'
+    }).nonempty({
         message: 'Brand tidak boleh kosong'
     }),
 
