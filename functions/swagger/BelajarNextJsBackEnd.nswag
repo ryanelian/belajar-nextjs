@@ -1,5 +1,5 @@
 {
-  "runtime": "Net60",
+  "runtime": "NetCore21",
   "defaultVariables": null,
   "documentGenerator": {
     "fromDocument": {
