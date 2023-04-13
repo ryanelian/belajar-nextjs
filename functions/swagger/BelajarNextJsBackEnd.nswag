@@ -10,7 +10,7 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "BelajarNextJsBackEndClient",
+      "className": "BelajarNextJsBackEndClient ",
       "moduleName": "",
       "namespace": "",
       "typeScriptVersion": 4.3,
@@ -47,7 +47,7 @@
       "useLeafType": false,
       "classTypes": [],
       "extendedClasses": [],
-      "extensionCode": null,
+      "extensionCode": "BelajarNextJsBackEnd.ts",
       "generateDefaultValues": true,
       "excludedTypeNames": [],
       "excludedParameterNames": [],
@@ -69,7 +69,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "BelajarNextJsBackEnd.ts",
+      "output": null,
       "newLineBehavior": "Auto"
     }
   }
