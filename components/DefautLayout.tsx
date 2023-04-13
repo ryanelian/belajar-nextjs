@@ -48,6 +48,20 @@ const DefaultLayout: React.FC<{
             onClick: () => router.push('/city')
         });
 
+        menu.push({
+            key: '/product',
+            label: 'Manage Product',
+            icon: <FontAwesomeIcon icon={faMountainCity}></FontAwesomeIcon>,
+            onClick: () => router.push('/product')
+        });
+
+        menu.push({
+            key: '/brand',
+            label: 'Manage Brand',
+            icon: <FontAwesomeIcon icon={faMountainCity}></FontAwesomeIcon>,
+            onClick: () => router.push('/brand')
+        });
+
         menu.push(
             {
                 key: '#menu-1',
