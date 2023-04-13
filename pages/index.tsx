@@ -1,4 +1,5 @@
-import { Link } from 'tabler-icons-react';
+
+import Link from 'next/link';
 import { WithDefaultLayout } from '../components/DefautLayout';
 import { Title } from '../components/Title';
 import { Page } from '../types/Page';
