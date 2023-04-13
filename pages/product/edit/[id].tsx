@@ -27,17 +27,21 @@ const FormSchema = z.object({
     description: z.string().nonempty({
         message: 'Deskripsi tidak boleh kosong'
     }),
-    price: z.number().int({
-        message: 'Harga harus angka dan tidak boleh kosong'
+    price: z.number({
+        invalid_type_error: 'Harga harus angka dan tidak boleh kosong'
     }).nonnegative({
         message: 'Harga tidak boleh negative'
     }).max(100000000, {
         message: 'Harga tidak boleh lebih dari 1000000000'
     }),
-    quantity: z.number().nonnegative({
+    quantity: z.number({
+        invalid_type_error: 'Harga harus angka dan tidak boleh kosong'
+    }).nonnegative({
         message: 'Kuantitas tidak boleh negative'
     }),
-    brandId: z.string().nonempty({
+    brandId: z.string({
+        required_error: 'Brand Id tidak boleh kosong'
+    }).nonempty({
         message: 'Brand Id tidak boleh kosong'
     })
 });
@@ -127,12 +131,12 @@ const EditForm: React.FC<{
             </div>
             <div className='mt-2'>
                 <label htmlFor='price'>Price</label>
-                <InputText id='price' {...register('price', { valueAsNumber: true })}></InputText>
+                <InputText type='number' id='price' {...register('price', { valueAsNumber: true })}></InputText>
                 <p className='text-red-500'>{errors['price']?.message}</p>
             </div>
             <div className='mt-2'>
                 <label htmlFor='quantity'>Quantity</label>
-                <InputText id='quantity' {...register('quantity', { valueAsNumber: true })}></InputText>
+                <InputText type='number' id='quantity' {...register('quantity', { valueAsNumber: true })}></InputText>
                 <p className='text-red-500'>{errors['quantity']?.message}</p>
             </div>
             <div className='mt-5'>
