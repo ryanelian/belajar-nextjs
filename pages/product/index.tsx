@@ -49,10 +49,6 @@ const ProductTableRow: React.FC<{
             },
         });
     }
-
-
-
-
     function formatDateTime() {
         const dt = product.createdAt?.toString();
         if (!dt) {
