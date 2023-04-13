@@ -25,7 +25,7 @@ const FormSchema = z.object({
         message: 'Nama tidak boleh kosong'
     }),
     description: z.string().nonempty({
-        message: 'Description tidak boleh kosong'
+        message: 'Deskripsi tidak boleh kosong'
     }),
     price: z.number().nonnegative()
         .max(100000000, "Harga tidak dapat lebih dari 100 juta rupiah")
