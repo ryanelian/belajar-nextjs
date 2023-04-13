@@ -6,8 +6,10 @@ import { Page } from '@/types/Page';
 import { faEdit, faPlus, faRemove } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Alert, Modal } from 'antd';
+import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import useSwr from 'swr';
+import { id as indonesianTime } from 'date-fns/locale';
 
 // C- Create
 // R- Read
@@ -43,11 +45,23 @@ const ProvinceTableRow: React.FC<{
         });
     }
 
+    function formatDateTime() {
+        const dt = province.createdAt?.toString(); // ini kan string...
+        if (!dt) {
+            return;
+        }
+
+        const isoDate = parseISO(dt);
+        return format(isoDate, 'd MMM yyy HH:mm:ss', {
+            locale: indonesianTime
+        });
+    }
+
     return (
         <tr>
             <td className="border px-4 py-2">{province.id}</td>
             <td className="border px-4 py-2">{province.name}</td>
-            <td className="border px-4 py-2">{province.createdAt?.toLocaleString()}</td>
+            <td className="border px-4 py-2">{formatDateTime()}</td>
             <td className="border px-4 py-2">
                 <Link href={`/province/edit/${province.id}`} className="inline-block py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
                     <FontAwesomeIcon className='mr-1' icon={faEdit}></FontAwesomeIcon>
