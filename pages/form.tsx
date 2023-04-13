@@ -1,96 +1,119 @@
-
-import Link from 'next/link';
-import { WithDefaultLayout } from '../components/DefautLayout';
-import { Page } from '../types/Page';
-import { FormEventHandler, useState } from 'react';
-import { Alert, notification } from 'antd';
+import { Page } from "@/types/Page";
+import { Alert, notification } from "antd";
+import Link from "next/link";
+import { FormEventHandler, useState } from "react";
 
 const FormPage: Page = () => {
-
     const [notify, contextHolder] = notification.useNotification();
-
+    const [error, setError] = useState('');
     const [inputName, setInputName] = useState('');
     const [inputNameValidation, setInputNameValidation] = useState('');
-    const [error, setError] = useState('');
+    const [inputEmail, setInputEmail] = useState('');
+    const [inputEmailValidation, setInputEmailValidation] = useState('');
+    const [inputPassword, setInputPassword] = useState('');
+    const [inputPasswordValidation, setInputPasswordValidation] = useState('');
+    const [inputConfirmPassword, setInputConfirmPassword] = useState('');
+    const [inputConfirmPasswordValidation, setInputConfirmPasswordValidation] = useState('');
 
-    function validate() {
+    function Validation() {
         if (!inputName) {
-            setInputNameValidation('Nama tidak boleh kosong!');
-            return false;
-        } else { // -->
-            if (inputName.length < 2) {
-                setInputNameValidation('Panjang nama minimal 2 karakter!');
-                return false;
-            } else {
-                setInputNameValidation('');
-            }
+            setInputNameValidation('Name is required');
+            return;
+        } else{
+            setInputNameValidation('');
         }
-
+        if(!inputEmail){
+            setInputEmailValidation('Email is required');
+            return;
+        } else{
+            setInputEmailValidation('');
+        }
+        if(!inputPassword){
+            setInputPasswordValidation('Password is required');
+            return;
+        }
+        else{
+            setInputPasswordValidation('');
+        }
+        if(!inputConfirmPassword){
+            setInputConfirmPasswordValidation('Confirm Password is required');
+            return;
+        }
+        else{
+            setInputConfirmPasswordValidation('');
+        }
+        if(inputPassword !== inputConfirmPassword){
+            setInputConfirmPasswordValidation('Password and Confirm Password must be same');
+            return;
+        }
+        else{
+            setInputConfirmPasswordValidation('');
+        }
         return true;
     }
 
+
     const onSubmit: FormEventHandler<HTMLFormElement> = async (e) => {
         setError('');
-
         e.preventDefault();
 
-        const valid = validate();
-        if (!valid) {
-            return;
-        }
-
+        const isValid = Validation();
+        if(!isValid) return;
         try {
-            await fetch('/api/fake', {
+            await fetch('https://example.com/api/test', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    name: inputName
+                    name: inputName,
+                    email: inputEmail,
+                    password: inputPassword,
+                    confirmPassword: inputConfirmPassword
+
                 })
             });
             notify.success({
-                message: 'Form Submit Success',
+                message: 'Success',
+                description: 'Form has been submitted',
                 placement: 'bottomRight'
             });
 
-            // reset form
             setInputName('');
-        } catch (err) {
-
+            setInputEmail('');
+            setInputPassword('');
+            setInputConfirmPassword('');
+        }
+        catch (err) {
             // 1
             notify.error({
-                message: 'An unhandled exception has occurred when submitting form',
+                message: 'An unhandled exception has occurred when submitting the form',
                 description: String(err),
                 placement: 'bottomRight'
             });
-
             // 2
-            setError(String(err));
+            setError(String(error));
         }
 
-    };
+    }
+    const inputBox = "mt-3 px-2 py-3 block w-1/2 rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50";
+    const submitBox = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5";
 
     return (
-        <div>
+        <div className="p-5">
             <div>
-                <Link href='/'>Ke Halaman Index</Link>
+                <Link href='/'>Ke Halaman Belajar</Link>
+            </div>
+            <div>
+                Name : {inputName}
             </div>
 
-            <div>
-                Name: {inputName}
-            </div>
-
-            {
-                error && <div className='mt-5 bg-red-200 text-red-600 border-red-600 p-5'>
-                    {error}
-                </div>
+            {error &&
+                <div className="mt-5 bg-red-200 text-red-500 border-red-600 p-5">{error}</div>
             }
 
-            {
-                error &&
+            {error &&
                 <Alert
-                    className='mt-5'
                     message="Error"
                     description={error}
                     type="error"
@@ -98,23 +121,36 @@ const FormPage: Page = () => {
                 />
             }
 
-            <form onSubmit={onSubmit}>
-                <div className='mt-5'>
-                    <label className='font-bold' htmlFor='name'>Name</label>
-                    <input value={inputName} onChange={t => setInputName(t.target.value)} className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' id='name' type='text'></input>
-                    {
-                        inputNameValidation && <p className='mt-2 text-red-500'>{inputNameValidation}</p>
-                    }
-                </div>
-                <div className='mt-5'>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' type='submit'>Submit</button>
-                </div>
-            </form>
 
+            <form onSubmit={onSubmit}>
+                <div>
+                    <h1 className="mb-5 p-2 font-bold">Forms Page</h1>
+                </div>
+                <div>
+                    <label htmlFor="name">Name</label>
+                    <input type="text" name="name" id="name" className={inputBox} />
+                    {inputNameValidation && <div className="text-red-500">{inputNameValidation}</div>}
+                </div>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" name="email" id="email" className={inputBox} />
+                    {inputEmailValidation && <div className="text-red-500">{inputEmailValidation}</div>}
+                </div>
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input type="password" name="password" id="password" className={inputBox} />
+                    {inputPasswordValidation && <div className="text-red-500">{inputPasswordValidation}</div>}
+                </div>
+                <div>
+                    <label htmlFor="confirmPassword">Confirm Password</label>
+                    <input type="password" name="confirmPassword" id="confirmPassword" className={inputBox} />
+                    {inputConfirmPasswordValidation && <div className="text-red-500">{inputConfirmPasswordValidation}</div>}
+                </div>
+                <button type="submit" className={submitBox}>Submit</button>
+            </form>
             {contextHolder}
         </div>
     );
 }
 
-FormPage.layout = WithDefaultLayout;
 export default FormPage;
