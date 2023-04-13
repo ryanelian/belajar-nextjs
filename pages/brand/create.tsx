@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitButton } from '@/components/SubmitButton';
 import { BelajarNextJsBackEndClient } from '@/functions/swagger/BelajarNextJsBackEnd';
 import Link from 'next/link';
+import { notification } from 'antd';
 
 // C- Create
 // R- Read
@@ -33,12 +34,19 @@ const IndexPage: Page = () => {
     });
 
     async function onSubmit(data: FormDataType) {
+        // console.log(data);
+
         try {
             const client = new BelajarNextJsBackEndClient('http://localhost:3000/api/be');
-            await client.createProvince({
+            await client.createBrand({
                 name: data.name
             });
             reset();
+            notification.success({
+                message: 'Success',
+                description: 'Successfully added brand data',
+                placement: 'bottomRight',
+            });
         } catch (error) {
             console.error(error);
         }
@@ -46,10 +54,10 @@ const IndexPage: Page = () => {
 
     return (
         <div>
-            <Title>Create New province</Title>
-            <Link href='/province'>Return to Index</Link>
+            <Title>Create New Brand</Title>
+            <Link href='/brand'>Return to Index</Link>
             
-            <h2 className='mb-5 text-3xl'>Create New Province</h2>
+            <h2 className='mb-5 text-3xl'>Create New Brand</h2>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label htmlFor='name'>Name</label>
