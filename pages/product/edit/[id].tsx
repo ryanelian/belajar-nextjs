@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitButton } from '@/components/SubmitButton';
-import { BelajarNextJsBackEndClient, City, CityDetailModel, Province } from '@/functions/swagger/BelajarNextJsBackEnd';
+import { BelajarNextJsBackEndClient, Brand, Product, ProductDetailModel} from '@/functions/swagger/BelajarNextJsBackEnd';
 import Link from 'next/link';
 import { Select, Spin, notification } from 'antd';
 import { useState } from 'react';
@@ -22,8 +22,25 @@ const FormSchema = z.object({
     name: z.string().nonempty({
         message: 'Nama tidak boleh kosong'
     }),
-    provinceId: z.string().nonempty({
-        message: 'Province Id tidak boleh kosong'
+
+    brandId: z.string().nonempty({
+        message: 'Brand Id tidak boleh kosong'
+    }),
+
+    price: z.number().positive({
+        message: 'Price harus positive harus lebih dari 0'
+    }).max(1_000_000_000, {
+        message: 'Price tidak boleh lebih dari 1 milyar'
+    }),
+
+    quantity: z.number().positive({
+        message: 'Quantity harus positive harus lebih dari 0'
+    }).max(1_000_000, {
+        message: 'Quantity tidak boleh lebih dari 1 juta'
+    }),
+
+    description: z.string().nonempty({
+        message: 'Description tidak boleh kosong'
     }),
 });
 
@@ -31,9 +48,9 @@ type FormDataType = z.infer<typeof FormSchema>;
 
 const EditForm: React.FC<{
     id: string
-    city: City
+    product: Product
     onEdited: () => void
-}> = ({ id, city, onEdited }) => {
+}> = ({ id, product, onEdited }) => {
     const {
         handleSubmit,
         register,
@@ -42,8 +59,11 @@ const EditForm: React.FC<{
         control
     } = useForm<FormDataType>({
         defaultValues: {
-            name: city.name,
-            provinceId: city.provinceId
+            name: product.name,
+            brandId: product.brandId,
+            price : product.price,
+            quantity : product.quantity,
+            description : product.description
         },
         resolver: zodResolver(FormSchema)
     });
@@ -53,9 +73,13 @@ const EditForm: React.FC<{
 
         try {
             const client = new BelajarNextJsBackEndClient('http://localhost:3000/api/be');
-            await client.updateCity(id, {
+            await client.updateProduct(id, {
                 name: data.name,
-                provinceId: data.provinceId
+                brandId: data.brandId,
+                price: data.price,
+                quantity: data.quantity,
+                description: data.description
+
             });
             reset(data);
             onEdited();
@@ -71,9 +95,9 @@ const EditForm: React.FC<{
     const [search, setSearch] = useState('');
     const params = new URLSearchParams();
     params.append('search', search);
-    const provinceUri = '/api/be/api/Provinces?' + params.toString();
+    const brandUri = '/api/be/api/Brands?' + params.toString();
     const fetcher = useSwrFetcherWithAccessToken();
-    const { data, isLoading, isValidating } = useSwr<Province[]>(provinceUri, fetcher);
+    const { data, isLoading, isValidating } = useSwr<Brand[]>(brandUri, fetcher);
 
 
     const setSearchDebounced = debounce((t: string) => setSearch(t), 300);
@@ -84,8 +108,8 @@ const EditForm: React.FC<{
             value: Q.id
         };
     }) ?? [{
-        label: city.name,
-        value: city.id
+        label: product.name,
+        value: product.id
     }];
 
     return (
@@ -93,21 +117,20 @@ const EditForm: React.FC<{
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div>
                     <label htmlFor='name'>Name</label>
-                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' id='name' {...register('name')}></input>
+                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='text' id='name' {...register('name')}></input>
                     <p className='text-red-500'>{errors['name']?.message}</p>
                 </div>
                 <div className="mt-5">
-                    <label htmlFor='province'>Province</label>
+                    <label htmlFor='brand'>Brand</label>
                     <Controller
                         control={control}
-                        name='provinceId'
+                        name='brandId'
                         render={({ field }) => (
                             <Select
                                 className='block'
                                 showSearch
-                                placeholder='Select a province'
+                                placeholder='Select a Brand'
                                 optionFilterProp='children'
-
                                 {...field}
 
 
@@ -118,17 +141,32 @@ const EditForm: React.FC<{
                             />
                         )}
                     ></Controller>
+                    <p className='text-red-500'>{errors['brandId']?.message}</p>
+                </div>
 
+                <div>
+                    <label htmlFor='price'>Price</label>
+                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='number' id='price' {...register('price', {valueAsNumber: true})} min={0} placeholder='1'></input>
+                    <p className='text-red-500'>{errors['price']?.message}</p>
+                </div>
 
+                <div>
+                    <label htmlFor='quantity'>Quantity</label>
+                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='number' id='quantity' {...register('quantity', {valueAsNumber: true})} min={0} placeholder='1'></input>
+                    <p className='text-red-500'>{errors['quantity']?.message}</p>
+                </div>
 
-                    <p className='text-red-500'>{errors['provinceId']?.message}</p>
+                <div>
+                    <label htmlFor='description'>Description</label>
+                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='text' id='description' {...register('description')} maxLength={100} placeholder='cant do more than 100 characters long'></input>
+                    <p className='text-red-500'>{errors['description']?.message}</p>
                 </div>
 
                 <div className='mt-5'>
                     <SubmitButton>Submit</SubmitButton>
                 </div>
                 <p>
-                    {provinceUri}
+                    {brandUri}
                 </p>
                 <p>
                     {JSON.stringify(data)}
@@ -142,25 +180,25 @@ const EditForm: React.FC<{
 const IndexPage: Page = () => {
     const router = useRouter();
     const { id } = router.query;
-    const cityDetailUri = id ? `/api/be/api/Cities/${id}` : undefined;
+    const productDetailUri = id ? `/api/be/api/Products/${id}` : undefined;
     const fetcher = useSwrFetcherWithAccessToken();
-    const { data, mutate } = useSwr<CityDetailModel>(cityDetailUri, fetcher);
+    const { data, mutate } = useSwr<ProductDetailModel>(productDetailUri, fetcher);
 
     function renderForm() {
         if (!id || !data || typeof id !== 'string') {
             return;
         }
         return (
-            <EditForm id={id} city={data} onEdited={() => mutate()}></EditForm>
+            <EditForm id={id} product={data} onEdited={() => mutate()}></EditForm>
         );
     }
 
     return (
         <div>
-            <Title>Edit City Data</Title>
-            <Link href='/city'>Return to Index</Link>
+            <Title>Edit Product Data</Title>
+            <Link href='/product'>Return to Index</Link>
 
-            <h2 className="mb-5 text-3xl">Edit City Data</h2>
+            <h2 className="mb-5 text-3xl">Edit Product Data</h2>
             {renderForm()}
         </div>
     );

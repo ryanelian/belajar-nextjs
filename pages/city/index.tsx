@@ -5,11 +5,11 @@ import { useSwrFetcherWithAccessToken } from '@/functions/useSwrFetcherWithAcces
 import { Page } from '@/types/Page';
 import { faEdit, faPlus, faRemove } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Modal } from 'antd';
-import { format, parseISO } from 'date-fns';
-import { id as indonesianTime } from 'date-fns/locale';
+import { Alert, Modal, notification } from 'antd';
 import Link from 'next/link';
 import useSwr from 'swr';
+import { format, parseISO } from 'date-fns';
+import { id as indonesianTime } from 'date-fns/locale';
 
 // C- Create
 // R- Read
@@ -35,8 +35,13 @@ const CityTableRow: React.FC<{
 
                 try {
                     const client = new BelajarNextJsBackEndClient('http://localhost:3000/api/be');
-                    await client.deleteCity(city.id);
+                    await client.deleteCities(city.id);
                     onDeleted();
+                    notification.success({
+                        message: 'Success',
+                        description: 'City has been deleted',
+                        placement: 'bottomRight'
+                    });
                 } catch (err) {
                     console.error(err);
                     // feedbacknya bisa pakai antd notification
@@ -46,16 +51,18 @@ const CityTableRow: React.FC<{
     }
 
     function formatDateTime() {
-        const dt = city.createdAt?.toString(); // ini kan string...
+        const dt = city.createdAt?.toString();
         if (!dt) {
             return;
         }
-
         const isoDate = parseISO(dt);
+
         return format(isoDate, 'd MMM yyy HH:mm:ss', {
             locale: indonesianTime
         });
     }
+
+
 
     return (
         <tr>
@@ -64,7 +71,7 @@ const CityTableRow: React.FC<{
             <td className="border px-4 py-2">{city.provinceName}</td>
             <td className="border px-4 py-2">{formatDateTime()}</td>
             <td className="border px-4 py-2">
-                <Link href={`/city/edit/${city.id}`} className="inline-block py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
+                <Link href={`/city/edit/${city.id}`} className="py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
                     <FontAwesomeIcon className='mr-1' icon={faEdit}></FontAwesomeIcon>
                     Edit
                 </Link>
@@ -84,12 +91,12 @@ const IndexPage: Page = () => {
 
     return (
         <div>
-            <Title>Manage Cities</Title>
-            <h2 className='mb-5 text-3xl'>Manage Cities</h2>
+            <Title>Manage Province</Title>
+            <h2 className='mb-5 text-3xl'>Manage City</h2>
             <div>
                 <Link href='/city/create' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block'>
                     <FontAwesomeIcon icon={faPlus} className='mr-2'></FontAwesomeIcon>
-                    Create New City
+                    Create new City
                 </Link>
             </div>
 

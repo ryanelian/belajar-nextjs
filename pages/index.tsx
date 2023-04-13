@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'tabler-icons-react';
 import { WithDefaultLayout } from '../components/DefautLayout';
 import { Title } from '../components/Title';
 import { Page } from '../types/Page';
@@ -23,6 +23,9 @@ const IndexPage: Page = () => {
                 </li>
                 <li>
                     <Link href='/swr'>Ke Halaman Belajar SWR</Link>
+                </li>
+                <li>
+                    <Link href='/province'>Ke Halaman Province</Link>
                 </li>
             </ul>
         </div>

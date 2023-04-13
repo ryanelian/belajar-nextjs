@@ -1,7 +1,7 @@
 import { WithDefaultLayout } from '@/components/DefautLayout';
 import { SubmitButton } from '@/components/SubmitButton';
 import { Title } from '@/components/Title';
-import { BelajarNextJsBackEndClient, Province } from '@/functions/swagger/BelajarNextJsBackEnd';
+import { BelajarNextJsBackEndClient, Brand } from '@/functions/swagger/BelajarNextJsBackEnd';
 import { useSwrFetcherWithAccessToken } from '@/functions/useSwrFetcherWithAccessToken';
 import { Page } from '@/types/Page';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,7 +40,7 @@ const EditForm: React.FC<{
     async function onSubmit(data: FormDataType) {
         try {
             const client = new BelajarNextJsBackEndClient('http://localhost:3000/api/be');
-            await client.updateProvince(id, {
+            await client.updateBrand(id, {
                 name: data.name
             });
             reset({
@@ -49,7 +49,7 @@ const EditForm: React.FC<{
             onEdit();
             notification.success({
                 message: 'Success',
-                description: 'Successfully Edited Province Data',
+                description: 'Successfully Edited Brand Data',
                 placement: 'bottomRight'
             })
 
@@ -76,8 +76,8 @@ const IndexPage: Page = () => {
     const router = useRouter();
     const { id } = router.query;
     const fetcher = useSwrFetcherWithAccessToken();
-    const provinceDetailUrl = id ? `/api/be/api/Provinces/${id}` : undefined;
-    const { data, mutate } = useSwr<Province>(provinceDetailUrl, fetcher);
+    const brandDetailUrl = id ? `/api/be/api/Brands/${id}` : undefined;
+    const { data, mutate } = useSwr<Brand>(brandDetailUrl, fetcher);
 
     function renderForm() {
         if (!id) {
@@ -103,10 +103,10 @@ const IndexPage: Page = () => {
 
     return (
         <div>
-            <Title>Edit Province Data</Title>
-            <Link href='/province'>Return to Index</Link>
+            <Title>Edit Brands Data</Title>
+            <Link href='/brand'>Return to Index</Link>
 
-            <h2>Edit Province Data</h2>
+            <h2>Edit Brands Data</h2>
             {renderForm()}
             {/* {JSON.stringify(data)} */}
         </div>
