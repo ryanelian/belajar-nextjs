@@ -83,12 +83,12 @@ const ProductTableRow: React.FC<{
 const IndexPage: Page = () => {
 
     const swrFetcher = useSwrFetcherWithAccessToken();
-    const { data, error, mutate } = useSwr<ProductDataGridItem[]>('/api/be/api/Cities', swrFetcher);
+    const { data, error, mutate } = useSwr<ProductDataGridItem[]>('/api/be/api/Products', swrFetcher);
 
     return (
         <div>
-            <Title>Manage Cities</Title>
-            <h2 className='mb-5 text-3xl'>Manage Cities</h2>
+            <Title>Manage Products</Title>
+            <h2 className='mb-5 text-3xl'>Manage Products</h2>
             <div>
                 <Link href='/product/create' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block'>
                     <FontAwesomeIcon icon={faPlus} className='mr-2'></FontAwesomeIcon>
@@ -96,7 +96,7 @@ const IndexPage: Page = () => {
                 </Link>
             </div>
 
-            {Boolean(error) && <Alert type='error' message='Cannot get cities data' description={String(error)}></Alert>}
+            {Boolean(error) && <Alert type='error' message='Cannot get product data' description={String(error)}></Alert>}
             <table className='table-auto mt-5'>
                 <thead className='bg-slate-700 text-white'>
                     <tr>

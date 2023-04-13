@@ -25,18 +25,27 @@ const FormSchema = z.object({
         message: 'Nama tidak boleh kosong'
     }),
     brandId: z.string().nonempty({
-        message: 'Province tidak boleh kosong'
+        message: 'Brand tidak boleh kosong'
     }),
     description: z.string().nonempty({
         message: 'Description tidak boleh kosong'
     }),
-    price: z.number()
-        .min(0, 'Price harus lebih besar dari atau sama dengan 0')
-        .max(100000000, 'Price tidak boleh lebih dari 100000000'),
-
-    quantity: z.number()
-        .min(0, 'Quantity harus lebih besar dari atau sama dengan 0'),
-
+    price: z.number({
+        invalid_type_error: "Price harus angka dan tidak boleh kosong"
+    }).nonnegative({
+        message: 'Price tidak boleh negatif'
+    }).max(100000000, {
+        message: 'Price tidak boleh lebih dari 100000000'
+    }).int({
+        message: 'Price harus Angka'
+    }),
+    quantity: z.number({
+        invalid_type_error: "Quantity harus angka dan tidak boleh kosong"
+    }).int({
+        message: 'Quantity harus Angka'
+    }).nonnegative({
+        message: 'Quantity tidak boleh negatif'
+    })
 });
 
 type FormDataType = z.infer<typeof FormSchema>;
@@ -114,10 +123,10 @@ const EditForm: React.FC<{
                 <InputText id='description' {...register('description')}></InputText>
                 <p className='text-red-500'>{errors['description']?.message}</p>
                 <label htmlFor='price'>Price</label>
-                <InputText id='price' {...register('price')}></InputText>
+                <InputText id='price'{...register('price', { valueAsNumber: true })}></InputText>
                 <p className='text-red-500'>{errors['price']?.message}</p>
                 <label htmlFor='quantity'>Quantity</label>
-                <InputText id='quantity' {...register('quantity')}></InputText>
+                <InputText id='quantity'{...register('quantity', { valueAsNumber: true })}></InputText>
                 <p className='text-red-500'>{errors['quantity']?.message}</p>
             </div>
             <div className='mt-5'>
