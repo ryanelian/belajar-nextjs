@@ -1,42 +1,47 @@
 import { WithDefaultLayout } from '@/components/DefautLayout';
 import { Title } from '@/components/Title';
-import { BelajarNextJsBackEndClient, Province } from '@/functions/swagger/BelajarNextJsBackEnd';
+import { BelajarNextJsBackEndClient, ProductDataGridItem } from '@/functions/swagger/BelajarNextJsBackEnd';
 import { useSwrFetcherWithAccessToken } from '@/functions/useSwrFetcherWithAccessToken';
 import { Page } from '@/types/Page';
 import { faEdit, faPlus, faRemove } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Alert, Modal } from 'antd';
+import { Alert, Modal, notification } from 'antd';
 import { format, parseISO } from 'date-fns';
+import { id as indonesianTime } from 'date-fns/locale';
 import Link from 'next/link';
 import useSwr from 'swr';
-import { id as indonesianTime } from 'date-fns/locale';
 
 // C- Create
 // R- Read
 // U- Update
 // D- Delete
 
-const ProvinceTableRow: React.FC<{
-    province: Province,
+const ProductTableRow: React.FC<{
+    product: ProductDataGridItem,
     onDeleted: () => void
-}> = ({ province, onDeleted }) => {
+}> = ({ product, onDeleted }) => {
 
     function onClickDelete() {
         Modal.confirm({
             title: `Confirm Delete`,
-            content: `Delete province ${province.name}?`,
+            content: `Delete product ${product.name}?`,
             okText: 'Yes',
             okType: 'danger',
             cancelText: 'No',
             async onOk() {
-                if (!province?.id) {
+                if (!product?.id) {
                     return;
                 }
 
                 try {
                     const client = new BelajarNextJsBackEndClient('http://localhost:3000/api/be');
-                    await client.deleteProvince(province.id);
+                    await client.deleteProduct(product.id);
                     onDeleted();
+                    notification.success({
+                        message: 'Success',
+                        description: 'Successfully deleted product',
+                        placement: 'bottomRight',
+                    });
                 } catch (err) {
                     console.error(err);
                     // feedbacknya bisa pakai antd notification
@@ -46,7 +51,7 @@ const ProvinceTableRow: React.FC<{
     }
 
     function formatDateTime() {
-        const dt = province.createdAt?.toString(); // ini kan string...
+        const dt = product.createdAt?.toString(); // ini kan string...
         if (!dt) {
             return;
         }
@@ -59,11 +64,15 @@ const ProvinceTableRow: React.FC<{
 
     return (
         <tr>
-            <td className="border px-4 py-2">{province.id}</td>
-            <td className="border px-4 py-2">{province.name}</td>
-            <td className="border px-4 py-2">{formatDateTime()}</td>
-            <td className="border px-4 py-2">
-                <Link href={`/province/edit/${province.id}`} className="inline-block py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
+            <td className="border px-3 py-2">{product.id}</td>
+            <td className="border px-3 py-2">{product.name}</td>
+            <td className="border px-3 py-2">{product.description}</td>
+            <td className="border px-3 py-2">{product.price}</td>
+            <td className="border px-3 py-2">{product.quantity}</td>
+            <td className="border px-3 py-2">{product.brandName}</td>
+            <td className="border px-3 py-2">{formatDateTime()}</td>
+            <td className="border px-3 py-2">
+                <Link href={`/product/edit/${product.id}`} className="inline-block py-1 px-2 text-xs bg-blue-500 text-white rounded-lg">
                     <FontAwesomeIcon className='mr-1' icon={faEdit}></FontAwesomeIcon>
                     Edit
                 </Link>
@@ -79,31 +88,35 @@ const ProvinceTableRow: React.FC<{
 const IndexPage: Page = () => {
 
     const swrFetcher = useSwrFetcherWithAccessToken();
-    const { data, error, mutate } = useSwr<Province[]>('/api/be/api/Provinces', swrFetcher);
+    const { data, error, mutate } = useSwr<ProductDataGridItem[]>('/api/be/api/Products', swrFetcher);
 
     return (
         <div>
-            <Title>Manage Province</Title>
-            <h2 className='mb-5 text-3xl'>Manage Province</h2>
+            <Title>Manage Product</Title>
+            <h2 className='mb-5 text-3xl'>Manage Product</h2>
             <div>
-                <Link href='/province/create' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block'>
+                <Link href='/product/create' className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded inline-block'>
                     <FontAwesomeIcon icon={faPlus} className='mr-2'></FontAwesomeIcon>
-                    Create new Province
+                    Create New Product
                 </Link>
             </div>
 
-            {Boolean(error) && <Alert type='error' message='Cannot get Provinces data' description={String(error)}></Alert>}
+            {Boolean(error) && <Alert type='error' message='Cannot get cities data' description={String(error)}></Alert>}
             <table className='table-auto mt-5'>
                 <thead className='bg-slate-700 text-white'>
                     <tr>
                         <th className='px-4 py-2'>ID</th>
                         <th className='px-4 py-2'>Name</th>
+                        <th className='px-4 py-2'>Description</th>
+                        <th className='px-4 py-2'>Price</th>
+                        <th className='px-4 py-2'>Quantity</th>
+                        <th className='px-4 py-2'>Brand Name</th>
                         <th className='px-4 py-2'>Created At</th>
-                        <th className='px-4 py-2'></th>
+                        <th className='px-4 py-2'>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {data?.map((x, i) => <ProvinceTableRow key={i} province={x} onDeleted={() => mutate()}></ProvinceTableRow>)}
+                    {data?.map((x, i) => <ProductTableRow key={i} product={x} onDeleted={() => mutate()}></ProductTableRow>)}
                 </tbody>
             </table>
         </div>
