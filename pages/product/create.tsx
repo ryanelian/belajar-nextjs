@@ -104,7 +104,9 @@ const IndexPage: Page = () => {
             label: Q.name,
             value: Q.id
         };
-    }) ?? [];
+    }) ?? [
+        
+    ];
 
     return (
         <div>

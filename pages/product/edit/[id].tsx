@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitButton } from '@/components/SubmitButton';
-import { BelajarNextJsBackEndClient, Brand, Product, ProductDetailModel} from '@/functions/swagger/BelajarNextJsBackEnd';
+import { BelajarNextJsBackEndClient, Brand, ProductDetailModel } from '@/functions/swagger/BelajarNextJsBackEnd';
 import Link from 'next/link';
 import { Select, Spin, notification } from 'antd';
 import { useState } from 'react';
@@ -48,7 +48,7 @@ type FormDataType = z.infer<typeof FormSchema>;
 
 const EditForm: React.FC<{
     id: string
-    product: Product
+    product: ProductDetailModel
     onEdited: () => void
 }> = ({ id, product, onEdited }) => {
     const {
@@ -61,9 +61,9 @@ const EditForm: React.FC<{
         defaultValues: {
             name: product.name,
             brandId: product.brandId,
-            price : product.price,
-            quantity : product.quantity,
-            description : product.description
+            price: product.price,
+            quantity: product.quantity,
+            description: product.description
         },
         resolver: zodResolver(FormSchema)
     });
@@ -108,8 +108,8 @@ const EditForm: React.FC<{
             value: Q.id
         };
     }) ?? [{
-        label: product.name,
-        value: product.id
+        label: product.brandId,
+        value: product.brandName
     }];
 
     return (
@@ -146,13 +146,13 @@ const EditForm: React.FC<{
 
                 <div>
                     <label htmlFor='price'>Price</label>
-                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='number' id='price' {...register('price', {valueAsNumber: true})} min={0} placeholder='1'></input>
+                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='number' id='price' {...register('price', { valueAsNumber: true })} min={0} placeholder='1'></input>
                     <p className='text-red-500'>{errors['price']?.message}</p>
                 </div>
 
                 <div>
                     <label htmlFor='quantity'>Quantity</label>
-                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='number' id='quantity' {...register('quantity', {valueAsNumber: true})} min={0} placeholder='1'></input>
+                    <input className='mt-1 px-2 py-3 block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50' type='number' id='quantity' {...register('quantity', { valueAsNumber: true })} min={0} placeholder='1'></input>
                     <p className='text-red-500'>{errors['quantity']?.message}</p>
                 </div>
 
