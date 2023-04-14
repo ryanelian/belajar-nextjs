@@ -535,7 +535,7 @@ export class BelajarNextJsBackEndClient {
 
         let options_: RequestInit = {
             body: content_,
-            method: "PUT",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             }

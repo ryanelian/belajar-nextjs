@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitButton } from '@/components/SubmitButton';
-import { BelajarNextJsBackEndClient, Brand, Product, ProductDetailModel } from '@/functions/swagger/BelajarNextJsBackEnd';
+import { BelajarNextJsBackEndClient, Brand, ProductDetailModel } from '@/functions/swagger/BelajarNextJsBackEnd';
 import Link from 'next/link';
 import { InputText } from '@/components/FormControl';
 import { Select, Spin, notification } from 'antd';
@@ -51,7 +51,7 @@ type FormDataType = z.infer<typeof FormSchema>;
 
 const EditForm: React.FC<{
     id: string,
-    product: Product,
+    product: ProductDetailModel,
     onEdited: () => void,
 }> = ({ id, product, onEdited }) => {
 
@@ -112,8 +112,8 @@ const EditForm: React.FC<{
             value: Q.id
         };
     }) ?? [{
-        label: product.name,
-        value: product.id
+        label: product.brandName,
+        value: product.brandId
     }];
 
 
