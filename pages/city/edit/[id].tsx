@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SubmitButton } from '@/components/SubmitButton';
-import { BelajarNextJsBackEndClient, City, CityDetailModel, Province } from '@/functions/swagger/BelajarNextJsBackEnd';
+import { BelajarNextJsBackEndClient, CityDetailModel, Province } from '@/functions/swagger/BelajarNextJsBackEnd';
 import Link from 'next/link';
 import { InputText } from '@/components/FormControl';
 import { Select, Spin, notification } from 'antd';
@@ -33,7 +33,7 @@ type FormDataType = z.infer<typeof FormSchema>;
 
 const EditForm: React.FC<{
     id: string,
-    city: City,
+    city: CityDetailModel,
     onEdited: () => void,
 }> = ({ id, city, onEdited }) => {
 
@@ -87,8 +87,8 @@ const EditForm: React.FC<{
             value: Q.id
         };
     }) ?? [{
-        label: city.name,
-        value: city.id
+        label: city.provinceName,
+        value: city.provinceId
     }];
 
     return (
