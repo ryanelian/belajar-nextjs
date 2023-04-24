@@ -45,7 +45,7 @@
     "@hookform/error-message": "2.0.1",
     "@hookform/resolvers": "3.0.1",
     "@types/lodash.debounce": "4.0.7",
-    "antd": "5.4.0",
+    "antd": "5.4.5",
     "date-fns": "2.29.3",
     "dayjs": "1.11.7",
     "http-proxy": "1.18.1",
